@@ -1,10 +1,12 @@
 package org.example.vacationpaycalculator.service.days;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -13,12 +15,22 @@ import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
-public class DaysCalculationService {
+public class DaysCalculationServiceImpl implements DaysCalculationService {
     public final static int CURRENT_YEAR = LocalDate.now().getYear();
 
-    public int calculateBusinessDays(int vacationDays,
-                                 LocalDate startVacationDate) {
+    @Override
+    public int calculateDays(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays) {
 
+        checkDate(startVacationDate, endVacationDate, vacationDays);
+
+        if (startVacationDate != null && endVacationDate != null) {
+            vacationDays = (int) ChronoUnit.DAYS.between(startVacationDate, endVacationDate) + 1;
+        }
+        return calculateBusinessDays(vacationDays, startVacationDate);
+    }
+
+    @Override
+    public int calculateBusinessDays(int vacationDays, LocalDate startVacationDate) {
         Predicate<LocalDate> holidays = getHolidays()::contains;
 
         List<LocalDate> listBusinessDays = Stream
@@ -52,4 +64,15 @@ public class DaysCalculationService {
 
         return Collections.unmodifiableList(holidays);
     }
+
+    public static void checkDate(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays) {
+        if (startVacationDate.isAfter(endVacationDate)) {
+            throw new ValidationException("Введены некорректные даты отпуска");
+        }
+        if (vacationDays != 0 && vacationDays != ((int) ChronoUnit.DAYS.between(startVacationDate, endVacationDate) + 1)) {
+            throw new ValidationException("Указанное количество дней отпуска не совпадает "
+                    + "с количеством дней отпуска по датам");
+        }
+    }
+
 }
