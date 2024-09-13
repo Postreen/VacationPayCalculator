@@ -2,9 +2,8 @@ package org.example.vacationpaycalculator.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.constraints.Positive;
 import org.example.vacationpaycalculator.dto.VacationPayCalculate;
-import org.example.vacationpaycalculator.service.days.DaysCalculationServiceImpl;
+import org.example.vacationpaycalculator.service.vacation.VacationPayCalculateService;
 import org.example.vacationpaycalculator.service.vacation.VacationPayCalculateServiceImpl;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -19,12 +18,10 @@ import java.util.Optional;
 @RestController
 @Validated
 public class VacationPayCalculatorController {
-    private final VacationPayCalculateServiceImpl vacationPayCalculateService;
-    private final DaysCalculationServiceImpl daysCalculationService;
+    private final VacationPayCalculateService vacationPayCalculateService;
 
-    public VacationPayCalculatorController(VacationPayCalculateServiceImpl vacationPayCalculatorService, DaysCalculationServiceImpl daysCalculationServiceImpl) {
+    public VacationPayCalculatorController(VacationPayCalculateService vacationPayCalculatorService) {
         this.vacationPayCalculateService = vacationPayCalculatorService;
-        this.daysCalculationService = daysCalculationServiceImpl;
     }
 
     @GetMapping("/calculacte")
@@ -36,16 +33,13 @@ public class VacationPayCalculatorController {
             @RequestParam("averageSalary") @Parameter(description = "Средняя зарплата за месяц") BigDecimal averageSalaryPerYear,
             @RequestParam(value = "vacationDays", defaultValue = "0") @Parameter(description = "Количество дней отпуска") int vacationDays,
 
-            @RequestParam @Parameter(description = "Дата начала отпуска")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> startVacationDate,
+            @RequestParam(required = false) @Parameter(description = "Дата начала отпуска")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startVacationDate,
 
-            @RequestParam @Parameter(description = "Дата окончания отпуска")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> endVacationDate) {
-        if (startVacationDate.isPresent() && endVacationDate.isPresent()) {
-            vacationDays = daysCalculationService.calculateDays(startVacationDate.get(), endVacationDate.get(), vacationDays);
-        } else if (startVacationDate.isPresent()) {
-            vacationDays = daysCalculationService.calculateBusinessDays(vacationDays, startVacationDate.get());
-        }
-        return vacationPayCalculateService.getVacationPayCalculation(averageSalaryPerYear, vacationDays);
+            @RequestParam(required = false) @Parameter(description = "Дата окончания отпуска")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endVacationDate) {
+
+        return vacationPayCalculateService.getVacationPayCalculation(averageSalaryPerYear, vacationDays,
+                startVacationDate, endVacationDate);
     }
 }

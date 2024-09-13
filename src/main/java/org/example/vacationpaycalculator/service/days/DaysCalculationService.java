@@ -4,5 +4,4 @@ import java.time.LocalDate;
 
 public interface DaysCalculationService {
     int calculateDays(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays);
-    int calculateBusinessDays(int vacationDays, LocalDate startVacationDate);
 }
