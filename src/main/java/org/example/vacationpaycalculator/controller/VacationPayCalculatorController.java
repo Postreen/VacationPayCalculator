@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.example.vacationpaycalculator.dto.VacationPayCalculate;
 import org.example.vacationpaycalculator.service.vacation.VacationPayCalculateService;
-import org.example.vacationpaycalculator.service.vacation.VacationPayCalculateServiceImpl;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @RestController
 @Validated

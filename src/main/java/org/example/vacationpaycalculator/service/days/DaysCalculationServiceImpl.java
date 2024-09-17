@@ -3,6 +3,8 @@ package org.example.vacationpaycalculator.service.days;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -10,7 +12,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,42 +20,45 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DaysCalculationServiceImpl implements DaysCalculationService {
     public final static int CURRENT_YEAR = LocalDate.now().getYear();
+    private static final Logger logger = LoggerFactory.getLogger("org.example.vacationpaycalculator.service");
 
     @Override
     public int calculateDays(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays) {
 
         if (startVacationDate == null) {
             startVacationDate = endVacationDate.minusDays(vacationDays - 1);
-            log.info("Расчетная начальная дата отпуска = {} дней", startVacationDate);
+            logger.info("Расчетная начальная дата отпуска = {} дней", startVacationDate);
         } else if (endVacationDate == null) {
             endVacationDate = startVacationDate.plusDays(vacationDays - 1);
-            log.info("Расчетная конечная дата отпуска = {} дней", endVacationDate);
+            logger.info("Расчетная конечная дата отпуска = {} дней", endVacationDate);
         }
 
         checkDate(startVacationDate, endVacationDate, vacationDays);
         vacationDays = (int) ChronoUnit.DAYS.between(startVacationDate, endVacationDate) + 1;
-        log.info("Количество дней отпуска = {} дней", vacationDays);
+        logger.info("Количество дней отпуска = {} дней", vacationDays);
 
         return calculateBusinessDays(vacationDays, startVacationDate);
     }
 
     public int calculateBusinessDays(int vacationDays, LocalDate startVacationDate) {
-        Predicate<LocalDate> holidays = getHolidays()::contains;
+        List<LocalDate> holidays = getHolidays();
 
-        List<LocalDate> listBusinessDays = Stream
-                .iterate(startVacationDate, nextVacationDate -> nextVacationDate
-                        .plusDays(1))
-                .limit(vacationDays)
-                .filter(vacationDate -> !(holidays.test(vacationDate)))
-                .filter(vacationDate -> !(vacationDate.getDayOfWeek() == DayOfWeek.SATURDAY || vacationDate.getDayOfWeek() == DayOfWeek.SUNDAY))
-                .collect(Collectors.toList());
+        int businessDaysCount = 0;
 
-        return listBusinessDays.size();
+        LocalDate endVacationDate = startVacationDate.plusDays(vacationDays - 1);
+        for (LocalDate date = startVacationDate; !date.isAfter(endVacationDate); date = date.plusDays(1)) {
+            if (!(date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY)
+                    && !holidays.contains(date)) {
+                businessDaysCount++;
+            }
+        }
+
+        return businessDaysCount;
     }
 
     public static List<LocalDate> getHolidays() {
         List<LocalDate> holidays = Stream.of(
-                LocalDate.of(CURRENT_YEAR, 1, 1),
+                LocalDate.of(CURRENT_YEAR, 1, 1), // Новогодние каникулы
                 LocalDate.of(CURRENT_YEAR, 1, 2), // Новогодние каникулы
                 LocalDate.of(CURRENT_YEAR, 1, 3), // Новогодние каникулы
                 LocalDate.of(CURRENT_YEAR, 1, 4), // Новогодние каникулы
@@ -74,15 +78,17 @@ public class DaysCalculationServiceImpl implements DaysCalculationService {
     }
 
     public static void checkDate(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays) {
+
         if (startVacationDate.isAfter(endVacationDate)) {
-            throw new ValidationException("Введены некорректные даты отпуска");
+            throw new ValidationException("Дата начала отпуска не может быть позже даты окончания отпуска.");
         }
-        if (startVacationDate == endVacationDate) {
-            throw new ValidationException("Введены некорректные даты отпуска");
+        if (startVacationDate.equals(endVacationDate)) {
+            throw new ValidationException("Должно быть известно количество дней отпуска или даты отпуска");
         }
-        if (vacationDays != 0 && vacationDays != ((int) ChronoUnit.DAYS.between(startVacationDate, endVacationDate) + 1)) {
-            throw new ValidationException("Указанное количество дней отпуска не совпадает "
-                    + "с количеством дней отпуска по датам");
+        long calculatedDays = ChronoUnit.DAYS.between(startVacationDate, endVacationDate) + 1;
+        if (vacationDays != 0 && vacationDays != calculatedDays) {
+            throw new ValidationException(String.format("Указанное количество дней отпуска (%d) " +
+                    "не совпадает с количеством дней по датам (%d).", vacationDays, calculatedDays));
         }
     }
 }
