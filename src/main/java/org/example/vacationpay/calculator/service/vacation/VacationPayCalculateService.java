@@ -1,0 +1,11 @@
+package org.example.vacationpay.calculator.service.vacation;
+
+import org.example.vacationpay.calculator.dto.VacationPayCalculate;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public interface VacationPayCalculateService {
+    VacationPayCalculate calculateVacationPay(BigDecimal averageSalaryPerYear, int vacationDays,
+                                                   LocalDate startVacationDate, LocalDate endVacationDate);
+}
