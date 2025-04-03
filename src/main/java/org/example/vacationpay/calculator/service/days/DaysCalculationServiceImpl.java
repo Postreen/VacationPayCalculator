@@ -2,18 +2,16 @@ package org.example.vacationpay.calculator.service.days;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.vacationpay.calculator.config.VacationProperties;
 import org.example.vacationpay.calculator.dto.enums.Region;
 import org.example.vacationpay.calculator.exception.VacationValidationException;
 import org.example.vacationpay.calculator.service.days.businessday.BusinessDayCalculationService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class DaysCalculationServiceImpl implements DaysCalculationService {
 

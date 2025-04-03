@@ -5,7 +5,6 @@ import java.util.List;
 import org.example.vacationpay.calculator.dto.enums.Region;
 
 public interface CountryHolidayProvider {
-
     List<LocalDate> getHolidays(int year);
 
     boolean matchesRegion(Region region);

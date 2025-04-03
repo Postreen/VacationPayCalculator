@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public interface VacationPayCalculateService {
     VacationPayCalculate calculateVacationPay(
-            BigDecimal averageSalaryPerYear,
+            BigDecimal averageSalaryPerMonth,
             int vacationDays,
             LocalDate startVacationDate,
             LocalDate endVacationDate,

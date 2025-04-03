@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-@Component("USA")
+@Component
 public class UsaHolidayProvider implements CountryHolidayProvider {
 
     @Override

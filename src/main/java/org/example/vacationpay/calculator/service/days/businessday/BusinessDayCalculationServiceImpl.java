@@ -2,20 +2,18 @@ package org.example.vacationpay.calculator.service.days.businessday;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.vacationpay.calculator.config.VacationProperties;
 import org.example.vacationpay.calculator.dto.enums.Region;
 import org.example.vacationpay.calculator.service.days.businessday.holiday.HolidayProviderService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class BusinessDayCalculationServiceImpl implements BusinessDayCalculationService {
 

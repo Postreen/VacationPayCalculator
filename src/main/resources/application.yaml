@@ -10,5 +10,4 @@ logging:
     root: INFO
 
 vacation:
-  average-days-in-month: 29.3
   ndfl: 0.13

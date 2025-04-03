@@ -43,11 +43,12 @@ public class VacationPayCalculatorController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorMessageDto.class))})})
     public VacationPayCalculate getVacationPay(
             @RequestHeader(value = "Region", defaultValue = "RU")
+            @Parameter(description = "Регион работника (RU/EU/USA)")
             Region region,
 
             @RequestParam("averageSalary")
-            @Parameter(description = "Средняя зарплата за год")
-            BigDecimal averageSalaryPerYear,
+            @Parameter(description = "Средняя зарплата в месяц")
+            BigDecimal averageSalaryPerMonth,
 
             @RequestParam(value = "vacationDays", defaultValue = "0")
             @Parameter(description = "Количество дней отпуска")
@@ -64,6 +65,6 @@ public class VacationPayCalculatorController {
             LocalDate endVacationDate
     ) {
         return vacationPayCalculateService.calculateVacationPay(
-                averageSalaryPerYear, vacationDays, startVacationDate, endVacationDate, region);
+                averageSalaryPerMonth, vacationDays, startVacationDate, endVacationDate, region);
     }
 }
