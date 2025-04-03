@@ -1,4 +1,4 @@
-package org.example.vacationpay.calculator.service.vacation;
+package org.example.vacationpay.calculator.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class VacationPayCalculateServiceImpl implements VacationPayCalculateServ
     @Override
     public VacationPayCalculate calculateVacationPay(
             BigDecimal averageSalaryPerMonth,
-            int vacationDays,
+            Integer vacationDays,
             LocalDate startVacationDate,
             LocalDate endVacationDate,
             Region region
@@ -47,7 +47,7 @@ public class VacationPayCalculateServiceImpl implements VacationPayCalculateServ
         return new VacationPayCalculate(totalPay);
     }
 
-    private void validateVacationDays(int vacationDays) {
+    private void validateVacationDays(Integer vacationDays) {
         if (vacationDays < 0) {
             throw new VacationValidationException("Количество дней не может быть отрицательным");
         }
@@ -59,7 +59,7 @@ public class VacationPayCalculateServiceImpl implements VacationPayCalculateServ
 
     private BigDecimal calculateTotalPayWithoutNDFL(
             BigDecimal averageEarningsPerDay,
-            int vacationDays
+            Integer vacationDays
     ) {
         return averageEarningsPerDay.multiply(BigDecimal.valueOf(vacationDays));
     }

@@ -1,6 +1,6 @@
 package org.example.vacationpay.calculator.service.tax.provider;
 
-import org.example.vacationpay.calculator.config.RussiaTaxRateConfig;
+import org.example.vacationpay.calculator.config.TaxRateConfig;
 import org.example.vacationpay.calculator.dto.enums.Region;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,6 @@ public class RussiaTaxProvider implements  RegionTaxProvider{
 
     @Override
     public BigDecimal getTaxRate(BigDecimal monthlySalary) {
-        return RussiaTaxRateConfig.TAX_RATES.floorEntry(monthlySalary).getValue();
+        return TaxRateConfig.getTaxRate(Region.RU, monthlySalary);
     }
 }

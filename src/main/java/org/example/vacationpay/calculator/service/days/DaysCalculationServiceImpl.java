@@ -18,7 +18,7 @@ public class DaysCalculationServiceImpl implements DaysCalculationService {
     private final BusinessDayCalculationService businessDayCalculationService;
 
     @Override
-    public int calculateDays(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays, Region region) {
+    public int calculateDays(LocalDate startVacationDate, LocalDate endVacationDate, Integer vacationDays, Region region) {
 
         if (startVacationDate == null && endVacationDate == null) {
             throw new VacationValidationException("Необходимо указать либо даты отпуска, либо количество дней.");
@@ -36,22 +36,24 @@ public class DaysCalculationServiceImpl implements DaysCalculationService {
         return businessDayCalculationService.calculate(startVacationDate, endVacationDate, region);
     }
 
-    private LocalDate calculateStartVacationDate(LocalDate endVacationDate, int vacationDays) {
+    private LocalDate calculateStartVacationDate(LocalDate endVacationDate, Integer vacationDays) {
         return endVacationDate.minusDays(vacationDays);
     }
 
-    private LocalDate calculateEndVacationDate(LocalDate startVacationDate, int vacationDays) {
+    private LocalDate calculateEndVacationDate(LocalDate startVacationDate, Integer vacationDays) {
         return startVacationDate.plusDays(vacationDays);
     }
 
-    private void checkDate(LocalDate startVacationDate, LocalDate endVacationDate, int vacationDays) {
+    private void checkDate(LocalDate startVacationDate, LocalDate endVacationDate, Integer vacationDays) {
         if (startVacationDate.isAfter(endVacationDate)) {
             throw new VacationValidationException("Дата начала отпуска не может быть позже даты окончания.");
         }
 
+        System.out.println(vacationDays);
+
         long calculatedDays = ChronoUnit.DAYS.between(startVacationDate, endVacationDate);
 
-        if (vacationDays != calculatedDays) {
+        if ((vacationDays != 0) && (vacationDays != calculatedDays)) {
             throw new VacationValidationException(String.format(
                     "Указанное количество дней (%d) не совпадает с количеством дней по датам (%d).",
                     vacationDays, calculatedDays));

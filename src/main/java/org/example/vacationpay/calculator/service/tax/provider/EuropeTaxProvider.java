@@ -1,5 +1,6 @@
 package org.example.vacationpay.calculator.service.tax.provider;
 
+import org.example.vacationpay.calculator.config.TaxRateConfig;
 import org.example.vacationpay.calculator.dto.enums.Region;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,6 @@ public class EuropeTaxProvider implements RegionTaxProvider{
 
     @Override
     public BigDecimal getTaxRate(BigDecimal monthlySalary) {
-        if (monthlySalary.compareTo(BigDecimal.valueOf(5000)) > 0) {
-            return BigDecimal.valueOf(0.25); // 25% для высоких доходов
-        }
-        return BigDecimal.valueOf(0.20); // 20% стандартный налог
+        return TaxRateConfig.getTaxRate(Region.EU, monthlySalary);
     }
 }

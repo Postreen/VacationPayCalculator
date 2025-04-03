@@ -18,7 +18,6 @@ public class TaxCalculationServiceImpl implements TaxCalculationService {
 
     @Override
     public BigDecimal calculateNdfl(Region region, BigDecimal monthlySalary) {
-        System.out.println(taxProviders);
 
         BigDecimal ndfl = taxProviders.stream()
                 .filter(provider -> provider.matchesRegion(region))

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.vacationpay.calculator.dto.ErrorMessageDto;
 import org.example.vacationpay.calculator.dto.VacationPayCalculate;
 import org.example.vacationpay.calculator.dto.enums.Region;
-import org.example.vacationpay.calculator.service.vacation.VacationPayCalculateService;
+import org.example.vacationpay.calculator.service.VacationPayCalculateService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +52,7 @@ public class VacationPayCalculatorController {
 
             @RequestParam(value = "vacationDays", defaultValue = "0")
             @Parameter(description = "Количество дней отпуска")
-            int vacationDays,
+            Integer vacationDays,
 
             @RequestParam(required = false)
             @Parameter(description = "Дата начала отпуска")
