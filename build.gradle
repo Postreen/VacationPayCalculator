@@ -35,6 +35,8 @@ dependencies {
 	implementation "ch.qos.logback:logback-classic:${logbackVersion}"
 	implementation "ch.qos.logback:logback-core:${logbackVersion}"
 
+	testImplementation "org.projectlombok:lombok:${lombokVersion}"
+	testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
