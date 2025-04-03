@@ -1,11 +1,16 @@
 package org.example.vacationpay.calculator.service.vacation;
 
 import org.example.vacationpay.calculator.dto.VacationPayCalculate;
+import org.example.vacationpay.calculator.dto.enums.Region;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public interface VacationPayCalculateService {
-    VacationPayCalculate calculateVacationPay(BigDecimal averageSalaryPerYear, int vacationDays,
-                                                   LocalDate startVacationDate, LocalDate endVacationDate);
+    VacationPayCalculate calculateVacationPay(
+            BigDecimal averageSalaryPerYear,
+            int vacationDays,
+            LocalDate startVacationDate,
+            LocalDate endVacationDate,
+            Region region);
 }

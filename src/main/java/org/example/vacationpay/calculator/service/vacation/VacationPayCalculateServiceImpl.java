@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.vacationpay.calculator.config.VacationProperties;
 import org.example.vacationpay.calculator.dto.VacationPayCalculate;
+import org.example.vacationpay.calculator.dto.enums.Region;
 import org.example.vacationpay.calculator.exception.VacationValidationException;
 import org.example.vacationpay.calculator.service.days.DaysCalculationService;
 import org.springframework.stereotype.Component;
@@ -21,12 +22,17 @@ public class VacationPayCalculateServiceImpl implements VacationPayCalculateServ
     private final DaysCalculationService daysCalculationService;
 
     @Override
-    public VacationPayCalculate calculateVacationPay(BigDecimal averageSalaryPerYear, int vacationDays,
-                                                     LocalDate startVacationDate, LocalDate endVacationDate) {
+    public VacationPayCalculate calculateVacationPay(
+            BigDecimal averageSalaryPerYear,
+            int vacationDays,
+            LocalDate startVacationDate,
+            LocalDate endVacationDate,
+            Region region
+    ) {
         validateVacationDays(vacationDays);
 
         if (startVacationDate != null || endVacationDate != null) {
-            vacationDays = daysCalculationService.calculateDays(startVacationDate, endVacationDate, vacationDays);
+            vacationDays = daysCalculationService.calculateDays(startVacationDate, endVacationDate, vacationDays, region);
         }
 
         BigDecimal averageEarningsPerDay = calculateAverageEarningsPerDay(averageSalaryPerYear);

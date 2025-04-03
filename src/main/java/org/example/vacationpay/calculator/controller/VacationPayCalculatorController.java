@@ -9,11 +9,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.example.vacationpay.calculator.dto.ErrorMessageDto;
 import org.example.vacationpay.calculator.dto.VacationPayCalculate;
+import org.example.vacationpay.calculator.dto.enums.Region;
 import org.example.vacationpay.calculator.service.vacation.VacationPayCalculateService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,6 +42,9 @@ public class VacationPayCalculatorController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorMessageDto.class))})})
     public VacationPayCalculate getVacationPay(
+            @RequestHeader(value = "Region", defaultValue = "RU")
+            Region region,
+
             @RequestParam("averageSalary")
             @Parameter(description = "Средняя зарплата за год")
             BigDecimal averageSalaryPerYear,
@@ -59,6 +64,6 @@ public class VacationPayCalculatorController {
             LocalDate endVacationDate
     ) {
         return vacationPayCalculateService.calculateVacationPay(
-                averageSalaryPerYear, vacationDays, startVacationDate, endVacationDate);
+                averageSalaryPerYear, vacationDays, startVacationDate, endVacationDate, region);
     }
 }
