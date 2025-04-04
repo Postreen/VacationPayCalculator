@@ -20,7 +20,9 @@
         </encoder>
     </appender>
 
-    <logger name="org.example.vacationpaycalculator.service" level="${SERVICE_LOG_LEVEL:-INFO}"/>
+    <logger name="org.example.vacationpaycalculator.service" level="${SERVICE_LOG_LEVEL:-INFO}">
+        <appender-ref ref="FILE"/>
+    </logger>
 
     <logger name="org.example.vacationpaycalculator.controller" level="${CONTROLLER_LOG_LEVEL:-WARN}">
         <appender-ref ref="FILE"/>
@@ -29,5 +31,6 @@
 
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
